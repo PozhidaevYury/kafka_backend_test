@@ -18,12 +18,11 @@ public class KafkaMessageProducer {
         createProducer();
     }
 
-    private KafkaMessageProducer createProducer() {
+    private void createProducer() {
         Properties properties = createProducerProperties();
         if (kafkaProducer == null) {
             kafkaProducer = new KafkaProducer<String, String>(properties);
         }
-        return this;
     }
 
     private Properties createProducerProperties() {

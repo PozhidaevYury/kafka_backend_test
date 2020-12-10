@@ -35,10 +35,16 @@ public class KafkaMessageConsumer {
     }
 
     public KafkaRecord waitForMessages(String message) {
-        Awaitility.await().atMost(30, TimeUnit.SECONDS)
+        Awaitility
+                .await()
+                .atMost(30, TimeUnit.SECONDS)
                 .until(() -> consume().stream().anyMatch(it -> it.hasSourceId(message)));
-        return receivedRecords.stream().filter(it -> it.hasSourceId(message))
-                .findFirst().orElseThrow(() -> new RuntimeException("no such record with sourceId" + message));
+
+        return receivedRecords
+                .stream()
+                .filter(it -> it.hasSourceId(message))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("no such record with sourceId" + message));
     }
 
     public void subscribe(String topic) {
