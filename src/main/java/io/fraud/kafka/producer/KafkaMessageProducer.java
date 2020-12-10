@@ -13,6 +13,7 @@ public class KafkaMessageProducer {
     private static KafkaProducer<String, String> kafkaProducer;
     private final String bootstrapServer;
 
+
     public KafkaMessageProducer(String bootstrapServer) {
         this.bootstrapServer = bootstrapServer;
         createProducer();

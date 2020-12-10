@@ -2,78 +2,93 @@ package io.fraud.kafka.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DealMessage{
+import java.util.Objects;
 
-	@JsonProperty("date")
-	private String date;
+public class DealMessage {
 
-	@JsonProperty("amount")
-	private double amount;
+    @JsonProperty("date")
+    private String date;
 
-	@JsonProperty("currency")
-	private String currency;
+    @JsonProperty("amount")
+    private double amount;
 
-	@JsonProperty("source")
-	private String source;
+    @JsonProperty("currency")
+    private String currency;
 
-	@JsonProperty("target")
-	private String target;
+    @JsonProperty("source")
+    private String source;
 
-	@JsonProperty("rate")
-	private Double rate;
+    @JsonProperty("target")
+    private String target;
 
-	@JsonProperty("base_currency")
-	private String baseCurrency;
+    @JsonProperty("rate")
+    private Double rate;
 
-	public void setDate(String date){
-		this.date = date;
-	}
+    @JsonProperty("base_currency")
+    private String baseCurrency;
 
-	public String getDate(){
-		return date;
-	}
+    public void setDate(String date) {
+        this.date = date;
+    }
 
-	public void setAmount(double amount){
-		this.amount = amount;
-	}
+    public String getDate() {
+        return date;
+    }
 
-	public double getAmount(){
-		return amount;
-	}
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 
-	public void setCurrency(String currency){
-		this.currency = currency;
-	}
+    public double getAmount() {
+        return amount;
+    }
 
-	public String getCurrency(){
-		return currency;
-	}
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
-	public void setSource(String source){
-		this.source = source;
-	}
+    public String getCurrency() {
+        return currency;
+    }
 
-	public String getSource(){
-		return source;
-	}
+    public void setSource(String source) {
+        this.source = source;
+    }
 
-	public void setTarget(String target){
-		this.target = target;
-	}
+    public String getSource() {
+        return source;
+    }
 
-	public String getTarget(){
-		return target;
-	}
+    public void setTarget(String target) {
+        this.target = target;
+    }
 
-	@Override
- 	public String toString(){
-		return 
-			"DealMessage{" + 
-			"date = '" + date + '\'' + 
-			",amount = '" + amount + '\'' + 
-			",currency = '" + currency + '\'' + 
-			",source = '" + source + '\'' + 
-			",target = '" + target + '\'' + 
-			"}";
-		}
+    public String getTarget() {
+        return target;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "DealMessage{" +
+                        "date = '" + date + '\'' +
+                        ",amount = '" + amount + '\'' +
+                        ",currency = '" + currency + '\'' +
+                        ",source = '" + source + '\'' +
+                        ",target = '" + target + '\'' +
+                        "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DealMessage that = (DealMessage) o;
+        return Double.compare(that.amount, amount) == 0 && Objects.equals(date, that.date) && Objects.equals(currency, that.currency) && Objects.equals(source, that.source) && Objects.equals(target, that.target) && Objects.equals(rate, that.rate) && Objects.equals(baseCurrency, that.baseCurrency);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, amount, currency, source, target, rate, baseCurrency);
+    }
 }

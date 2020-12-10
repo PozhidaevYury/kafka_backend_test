@@ -3,7 +3,11 @@ package io.fraud.tests;
 import io.fraud.kafka.KafkaRecord;
 import io.fraud.kafka.KafkaService;
 import io.fraud.kafka.messages.DealMessage;
+import io.fraud.kafka.messages.MessageGenerator;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -23,12 +27,43 @@ public class BackendTests {
 
     @Test
     void testAppCanProcessValidMessage() {
+        MessageGenerator messageGenerator = new MessageGenerator();
+        messageGenerator
+                .setDate(new Date().toString())
+                .setAmount(200)
+                .setCurrency("USD")
+                .setTarget(RandomStringUtils.randomAlphabetic(10))
+                .setSource(RandomStringUtils.randomAlphabetic(3));
+
+
         kafkaService.subscribe("streaming.transactions.legit");
-        kafkaService.send("queuing.transactions", "{\"date\": \"12/08/2020 12:27:12\", \"source\": \"java14\", \"target\": \"IUsmnlzitnZ6\", \"amount\": 300, \"currency\": \"USD\"}");
+        kafkaService.send("queuing.transactions", messageGenerator);
 
-        DealMessage dealMessage = kafkaService.waitForMessages("java14").valueAs(DealMessage.class);
+        DealMessage dealMessage =
+                kafkaService.waitForMessages(messageGenerator.getTarget()).valueAs(DealMessage.class);
 
-        assertThat(dealMessage.getAmount()).isEqualTo(300.0);
+        assertThat(dealMessage.getAmount()).isEqualTo(200.0);
+        assertThat(dealMessage.getCurrency()).isEqualTo("USD");
+    }
+
+    @Test
+    void testAppCanProcessFraudMessage() {
+        MessageGenerator messageGenerator = new MessageGenerator();
+        messageGenerator
+                .setDate(new Date().toString())
+                .setAmount(2000)
+                .setCurrency("USD")
+                .setTarget(RandomStringUtils.randomAlphabetic(10))
+                .setSource(RandomStringUtils.randomAlphabetic(3));
+
+
+        kafkaService.subscribe("streaming.transactions.fraud");
+        kafkaService.send("queuing.transactions", messageGenerator);
+
+        DealMessage dealMessage =
+                kafkaService.waitForMessages(messageGenerator.getTarget()).valueAs(DealMessage.class);
+
+        assertThat(dealMessage.getAmount()).isEqualTo(2000.0);
         assertThat(dealMessage.getCurrency()).isEqualTo("USD");
     }
 }
