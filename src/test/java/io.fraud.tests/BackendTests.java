@@ -1,7 +1,6 @@
 package io.fraud.tests;
 
 import io.fraud.kafka.KafkaRecord;
-import io.fraud.kafka.KafkaService;
 import io.fraud.kafka.messages.DealMessage;
 import io.fraud.kafka.messages.MessageGenerator;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -11,9 +10,7 @@ import java.util.Date;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
-public class BackendTests {
-
-    private final KafkaService kafkaService = new KafkaService("localhost:9092");
+public class BackendTests extends BaseTest {
 
     @Test
     void testCanWriteMessageToQueueTransaction() {

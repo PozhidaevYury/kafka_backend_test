@@ -2,5 +2,19 @@ package io.fraud.kafka;
 
 import org.aeonbits.owner.Config;
 
-interface ProjectConfig extends Config {
+@Config.Sources({"classpath:config.properties"})
+public interface ProjectConfig extends Config {
+    String env();
+    @Key("${env}.dbHost")
+    String dbHost();
+    @Key("${env}.dbPort")
+    String dbPort();
+    @Key("${env}.dbName")
+    String dbName();
+    @Key("${env}.dbUser")
+    String dbUser();
+    @Key("${env}.dbPassword")
+    String dbPassword();
+    @Key("${env}.kafkaBrokers")
+    String kafkaBrokers();
 }

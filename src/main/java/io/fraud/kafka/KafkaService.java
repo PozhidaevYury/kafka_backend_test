@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fraud.kafka.consumer.KafkaMessageConsumer;
 import io.fraud.kafka.producer.KafkaMessageProducer;
+import org.aeonbits.owner.ConfigFactory;
 
 public class KafkaService {
 
@@ -11,9 +12,10 @@ public class KafkaService {
     private final KafkaMessageConsumer kafkaMessageConsumer;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public KafkaService(String server) {
-        kafkaMessageProducer = new KafkaMessageProducer(server);
-        kafkaMessageConsumer = new KafkaMessageConsumer(server);
+    public KafkaService() {
+        ProjectConfig projectConfig = ConfigFactory.create(ProjectConfig.class);
+        kafkaMessageProducer = new KafkaMessageProducer(projectConfig.kafkaBrokers());
+        kafkaMessageConsumer = new KafkaMessageConsumer(projectConfig.kafkaBrokers());
     }
 
     public void send(String topic, String message) {
