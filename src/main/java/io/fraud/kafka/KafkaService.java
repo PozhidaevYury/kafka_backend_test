@@ -11,9 +11,9 @@ public class KafkaService {
     private final KafkaMessageProducer kafkaMessageProducer;
     private final KafkaMessageConsumer kafkaMessageConsumer;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ProjectConfig projectConfig = ConfigFactory.create(ProjectConfig.class);
 
     public KafkaService() {
-        ProjectConfig projectConfig = ConfigFactory.create(ProjectConfig.class);
         kafkaMessageProducer = new KafkaMessageProducer(projectConfig.kafkaBrokers());
         kafkaMessageConsumer = new KafkaMessageConsumer(projectConfig.kafkaBrokers());
     }
@@ -22,12 +22,20 @@ public class KafkaService {
         kafkaMessageProducer.send(topic, message);
     }
 
-    public void send(String topic, Object message) {
+    public void send(Object message) {
         try {
-            kafkaMessageProducer.send(topic, objectMapper.writeValueAsString(message));
+            kafkaMessageProducer.send(projectConfig.queueTopic(), objectMapper.writeValueAsString(message));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void subscribeToLegitTopic() {
+        subscribe(projectConfig.legitTopic());
+    }
+
+    public void subscribeToFraudTopic() {
+        subscribe(projectConfig.fraudTopic());
     }
 
     public void subscribe(String topic) {

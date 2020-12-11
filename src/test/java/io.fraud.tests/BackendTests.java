@@ -33,8 +33,8 @@ public class BackendTests extends BaseTest {
                 .setSource(RandomStringUtils.randomAlphabetic(3));
 
 
-        kafkaService.subscribe("streaming.transactions.legit");
-        kafkaService.send("queuing.transactions", messageGenerator);
+        kafkaService.subscribeToLegitTopic();
+        kafkaService.send(messageGenerator);
 
         DealMessage dealMessage =
                 kafkaService.waitForMessages(messageGenerator.getTarget()).valueAs(DealMessage.class);
@@ -54,8 +54,8 @@ public class BackendTests extends BaseTest {
                 .setSource(RandomStringUtils.randomAlphabetic(3));
 
 
-        kafkaService.subscribe("streaming.transactions.fraud");
-        kafkaService.send("queuing.transactions", messageGenerator);
+        kafkaService.subscribeToFraudTopic();
+        kafkaService.send(messageGenerator);
 
         DealMessage dealMessage =
                 kafkaService.waitForMessages(messageGenerator.getTarget()).valueAs(DealMessage.class);
