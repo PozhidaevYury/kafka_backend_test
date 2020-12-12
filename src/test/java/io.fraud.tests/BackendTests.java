@@ -24,43 +24,41 @@ public class BackendTests extends BaseTest {
 
     @Test
     void testAppCanProcessValidMessage() {
-        MessageGenerator messageGenerator = new MessageGenerator();
-        messageGenerator
-                .setDate(new Date().toString())
-                .setAmount(200)
-                .setCurrency("USD")
-                .setTarget(RandomStringUtils.randomAlphabetic(10))
-                .setSource(RandomStringUtils.randomAlphabetic(3));
-
+        // MessageGenerator messageGenerator = new MessageGenerator();
+        // messageGenerator
+        //         .setDate(new Date().toString())
+        //         .setAmount(200)
+        //         .setCurrency("USD")
+        //         .setTarget(RandomStringUtils.randomAlphabetic(10))
+        //         .setSource(RandomStringUtils.randomAlphabetic(3));
 
         kafkaService.subscribeToLegitTopic();
-        kafkaService.send(messageGenerator);
+        MessageGenerator messageGenerator = kafkaService.send();
 
         DealMessage dealMessage =
                 kafkaService.waitForMessages(messageGenerator.getTarget()).valueAs(DealMessage.class);
 
-        assertThat(dealMessage.getAmount()).isEqualTo(200.0);
-        assertThat(dealMessage.getCurrency()).isEqualTo("USD");
+        assertThat(dealMessage.getAmount()).isEqualTo(messageGenerator.getAmount());
+        assertThat(dealMessage.getCurrency()).isEqualTo(messageGenerator.getCurrency());
     }
 
     @Test
     void testAppCanProcessFraudMessage() {
-        MessageGenerator messageGenerator = new MessageGenerator();
-        messageGenerator
-                .setDate(new Date().toString())
-                .setAmount(2000)
-                .setCurrency("USD")
-                .setTarget(RandomStringUtils.randomAlphabetic(10))
-                .setSource(RandomStringUtils.randomAlphabetic(3));
-
+      //  MessageGenerator messageGenerator = new MessageGenerator();
+      //  messageGenerator
+      //          .setDate(new Date().toString())
+      //          .setAmount(2000)
+      //          .setCurrency("USD")
+      //          .setTarget(RandomStringUtils.randomAlphabetic(10))
+      //          .setSource(RandomStringUtils.randomAlphabetic(3));
 
         kafkaService.subscribeToFraudTopic();
-        kafkaService.send(messageGenerator);
+        MessageGenerator messageGenerator = kafkaService.send();
 
         DealMessage dealMessage =
                 kafkaService.waitForMessages(messageGenerator.getTarget()).valueAs(DealMessage.class);
 
-        assertThat(dealMessage.getAmount()).isEqualTo(2000.0);
-        assertThat(dealMessage.getCurrency()).isEqualTo("USD");
+        assertThat(dealMessage.getAmount()).isEqualTo(messageGenerator.getAmount());
+        assertThat(dealMessage.getCurrency()).isEqualTo(messageGenerator.getCurrency());
     }
 }
