@@ -5,6 +5,11 @@ import io.fraud.kafka.KafkaRecord;
 import io.fraud.kafka.messages.DealMessage;
 import io.fraud.kafka.messages.MessageGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -62,8 +67,24 @@ public class BackendTests extends BaseTest {
 
     @Test
     void testAppCanSaveFraudMessageToDb() {
-        Deal deal = dbService.findDealById(100);
-        System.out.println(deal.getAmount());
-        //assertThat(deal.getAmount()).isEqualTo(200);
+        List<Deal> deals = dbService.findDealById(100);
+        assertThat(deals.size()).isEqualTo(1);
+    }
+
+    @ParameterizedTest
+    @MethodSource("generatorMessages")
+    void test(String message) {
+        MessageGenerator messageGenerator = kafkaService.send(message);
+
+        List<Deal> deals = dbService.findDealById(1);
+
+        assertThat(deals.get(0).getBaseCurrency()).isEqualTo("USD");
+    }
+
+    public static Stream<String> generatorMessages() {
+        return Stream.of(
+                "{\"date\": \"12/08/2020 12:27:12\", \"source\": \"java14\", \"target\": \"IUsmnlzitnZ6\", \"amount\": 300, \"currency\": \"USD\"}",
+                "{\"date\": \"12/08/2020 13:27:12\", \"source\": \"java15\", \"target\": \"IUsmnlzitwZ6\", \"amount\": 500, \"currency\": \"USD\"}"
+        );
     }
 }

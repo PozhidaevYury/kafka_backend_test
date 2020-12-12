@@ -8,6 +8,8 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.postgresql.ds.PGSimpleDataSource;
 
+import java.util.List;
+
 public class DbService {
 
     private final Jdbi jdbi;
@@ -26,7 +28,7 @@ public class DbService {
         this.jdbi.installPlugin(new SqlObjectPlugin());
     }
 
-    public Deal findDealById(int id) {
+    public List<Deal> findDealById(int id) {
         return jdbi.onDemand(DealDao.class).findById(id);
     }
 }
