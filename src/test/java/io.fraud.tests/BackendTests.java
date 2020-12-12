@@ -1,12 +1,10 @@
 package io.fraud.tests;
 
+import io.fraud.db.model.Deal;
 import io.fraud.kafka.KafkaRecord;
 import io.fraud.kafka.messages.DealMessage;
 import io.fraud.kafka.messages.MessageGenerator;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -44,13 +42,13 @@ public class BackendTests extends BaseTest {
 
     @Test
     void testAppCanProcessFraudMessage() {
-      //  MessageGenerator messageGenerator = new MessageGenerator();
-      //  messageGenerator
-      //          .setDate(new Date().toString())
-      //          .setAmount(2000)
-      //          .setCurrency("USD")
-      //          .setTarget(RandomStringUtils.randomAlphabetic(10))
-      //          .setSource(RandomStringUtils.randomAlphabetic(3));
+        //  MessageGenerator messageGenerator = new MessageGenerator();
+        //  messageGenerator
+        //          .setDate(new Date().toString())
+        //          .setAmount(2000)
+        //          .setCurrency("USD")
+        //          .setTarget(RandomStringUtils.randomAlphabetic(10))
+        //          .setSource(RandomStringUtils.randomAlphabetic(3));
 
         kafkaService.subscribeToFraudTopic();
         MessageGenerator messageGenerator = kafkaService.send();
@@ -60,5 +58,12 @@ public class BackendTests extends BaseTest {
 
         assertThat(dealMessage.getAmount()).isEqualTo(messageGenerator.getAmount());
         assertThat(dealMessage.getCurrency()).isEqualTo(messageGenerator.getCurrency());
+    }
+
+    @Test
+    void testAppCanSaveFraudMessageToDb() {
+        Deal deal = dbService.findDealById(100);
+        System.out.println(deal.getAmount());
+        //assertThat(deal.getAmount()).isEqualTo(200);
     }
 }

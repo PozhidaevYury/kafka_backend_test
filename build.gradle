@@ -22,6 +22,11 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compile group: 'org.aeonbits.owner', name: 'owner', version: '1.0.12'
     compile group: 'org.jtwig', name: 'jtwig-core', version: '5.87.0.RELEASE'
+
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.14'
+    compile group: 'org.jdbi', name: 'jdbi3-core', version: '3.18.0'
+    compile group: 'org.jdbi', name: 'jdbi3-postgres', version: '3.18.0'
+    compile group: 'org.jdbi', name: 'jdbi3-sqlobject', version: '3.18.0'
 }
 
 test {
